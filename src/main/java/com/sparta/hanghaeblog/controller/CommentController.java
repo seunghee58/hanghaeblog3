@@ -1,4 +1,36 @@
 package com.sparta.hanghaeblog.controller;
 
+import com.sparta.hanghaeblog.dto.CommentRequestDto;
+import com.sparta.hanghaeblog.dto.CommentResponseDto;
+import com.sparta.hanghaeblog.service.CommentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api")
 public class CommentController {
+
+    private final CommentService commentService;
+
+    // Comment 작성
+    @PostMapping("/api/comment/{postId}")
+    public CommentResponseDto createComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+        return commentService.createComment(postId, commentRequestDto, httpServletRequest);
+    }
+
+    // Comment 수정
+    @PutMapping("/api/comment/{commentId}")
+    public CommentResponseDto updateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+        return commentService.updateComment(commentId, commentRequestDto, httpServletRequest);
+    }
+
+    // Comment 삭제
+    @DeleteMapping("/api/comment/{commentId}")
+    public String deleteComment(@PathVariable Long commentId, HttpServletRequest httpServletRequest) {
+        return commentService.deleteComment(commentId, httpServletRequest);
+    }
 }
