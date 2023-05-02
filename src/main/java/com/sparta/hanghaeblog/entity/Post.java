@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -20,7 +22,7 @@ public class Post extends Timestamped { // 타임스탬프는 포스트 entity�
     private String title;
 
     @Column(nullable = false)
-    private String contents;
+    private String content;
 
     @Column(nullable = false)
     private String username;
@@ -34,12 +36,15 @@ public class Post extends Timestamped { // 타임스탬프는 포스트 entity�
     // referencedColumnName = 외래키가 참조하는 컬럼명, insertable,updatable = 해당 엔티티가 DB에 삽입,수정될 때 외래 키 열도 함께 변경 가능 여부를 나타냄
     private User user;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<Comment> comment = new ArrayList<>();
+
 
     // Post Entity의 생성자. 생성자란 객체를 생성할 때 객체의 초기화를 담당하는 메서드
     // Post 객체를 생성할 때 사용, 객체를 생성하고 저장함으로써 새로운 게시글을 데이터 베이스에 등록할 수 있다.
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
-        this.contents = requestDto.getContents();
+        this.content = requestDto.getContents();
         this.user = user;
         this.username = user.getUsername();
     }
@@ -48,7 +53,6 @@ public class Post extends Timestamped { // 타임스탬프는 포스트 entity�
     // Post Entity의 필드 값을 해당 객체의 필드 값으로 변경, 즉 게시글을 수정하고 업데이트함
     public void update(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.contents = requestDto.getContents();
-
+        this.content = requestDto.getContents();
     }
 }
