@@ -1,5 +1,7 @@
 package com.sparta.hanghaeblog.service;
 
+import com.sparta.hanghaeblog.dto.ApiResult;
+import com.sparta.hanghaeblog.dto.CommentResponseDto;
 import com.sparta.hanghaeblog.dto.PostRequestDto;
 import com.sparta.hanghaeblog.dto.PostResponseDto;
 import com.sparta.hanghaeblog.entity.Post;
@@ -91,24 +93,28 @@ public class PostService {
 
     // Post 삭제
     @Transactional
-    public String deletePost (Long id, HttpServletRequest request) {
+    public ApiResult deletePost (Long id, HttpServletRequest request) {
 
         // 토큰 체크 추가
         User user = checkToken(request);
-
-        if (user == null) {
-            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
-        }
 
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("해당 글이 존재하지 않습니다.")
         );
 
+        if (user == null) {
+            return new ApiResult("작성자만 삭제할 수 있습니다.", 400);
+        }
+
+        if (!post.getUser().equals(user)) {
+            return new ApiResult("작성자만 삭제할 수 있습니다.", 400);
+        }
+
         if (post.getUser().equals(user)) {
             postRepository.delete(post);
         }
 
-        return "삭제 성공";
+        return new ApiResult("삭제 성공", 200);
     }
 
 
@@ -123,7 +129,7 @@ public class PostService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("Token Error");
+                return null;
             }
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회

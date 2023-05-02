@@ -1,8 +1,8 @@
 package com.sparta.hanghaeblog.service;
 
+import com.sparta.hanghaeblog.dto.ApiResult;
 import com.sparta.hanghaeblog.dto.CommentRequestDto;
 import com.sparta.hanghaeblog.dto.CommentResponseDto;
-import com.sparta.hanghaeblog.dto.PostResponseDto;
 import com.sparta.hanghaeblog.entity.Comment;
 import com.sparta.hanghaeblog.entity.Post;
 import com.sparta.hanghaeblog.entity.User;
@@ -13,6 +13,7 @@ import com.sparta.hanghaeblog.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +27,7 @@ public class CommentService {
     private final JwtUtil jwtUtil;
 
     // Comment 작성
+    @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
         User user = checkToken(httpServletRequest);
 
@@ -43,6 +45,7 @@ public class CommentService {
 
 
     // Comment 수정
+    @Transactional
     public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
         User user = checkToken(httpServletRequest);
 
@@ -59,8 +62,8 @@ public class CommentService {
     }
 
 
-    // Comment 삭제
-    public String deleteComment(Long commentId, HttpServletRequest httpServletRequest) {
+    /// Comment 삭제
+    public ApiResult deleteComment(Long commentId, HttpServletRequest httpServletRequest) {
         User user = checkToken(httpServletRequest);
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
@@ -69,9 +72,9 @@ public class CommentService {
 
         if (comment.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(user.getRole().ADMIN)) {
             commentRepository.delete(comment);
-            return "댓글 삭제 성공";
+            return new ApiResult("삭제 성공", 200);
         } else {
-            throw new IllegalArgumentException("권한이 없습니다.");
+            return new ApiResult("작성자만 삭제할 수 있습니다.", 400);
         }
 
     }
@@ -101,3 +104,4 @@ public class CommentService {
         return null;
     }
 }
+
