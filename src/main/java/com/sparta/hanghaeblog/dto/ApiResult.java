@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class ApiResult {
     // API result 반환을 위한 DTO
-    // 성공 MSG와 status code(상태 코드)를 반환
+    // MSG와 status code(상태 코드)를 반환
 
     private String msg;
     private int statusCode;
