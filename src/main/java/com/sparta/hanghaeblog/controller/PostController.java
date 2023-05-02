@@ -1,5 +1,6 @@
 package com.sparta.hanghaeblog.controller;
 
+import com.sparta.hanghaeblog.dto.ApiResult;
 import com.sparta.hanghaeblog.dto.PostRequestDto;
 import com.sparta.hanghaeblog.dto.PostResponseDto;
 import com.sparta.hanghaeblog.service.PostService;
@@ -41,7 +42,7 @@ public class PostController {
 
     // Post 삭제 API
     @DeleteMapping("/api/posts/{id}")
-    public String deletePost(@PathVariable Long id, HttpServletRequest httpServletRequest) {
+    public ApiResult deletePost(@PathVariable Long id, HttpServletRequest httpServletRequest) {
         return postService.deletePost(id, httpServletRequest);
     }
 }

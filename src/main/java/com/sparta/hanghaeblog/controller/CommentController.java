@@ -1,5 +1,6 @@
 package com.sparta.hanghaeblog.controller;
 
+import com.sparta.hanghaeblog.dto.ApiResult;
 import com.sparta.hanghaeblog.dto.CommentRequestDto;
 import com.sparta.hanghaeblog.dto.CommentResponseDto;
 import com.sparta.hanghaeblog.service.CommentService;
@@ -29,7 +30,7 @@ public class CommentController {
 
     // Comment 삭제 API
     @DeleteMapping("/comment/{commentId}")
-    public String deleteComment(@PathVariable Long commentId, HttpServletRequest httpServletRequest) {
+    public ApiResult deleteComment(@PathVariable Long commentId, HttpServletRequest httpServletRequest) {
         return commentService.deleteComment(commentId, httpServletRequest);
     }
 }
