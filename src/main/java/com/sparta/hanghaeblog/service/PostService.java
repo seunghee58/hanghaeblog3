@@ -56,8 +56,6 @@ public class PostService {
         return postResponseDto;
     }
 
-
-
     // 선택 Post 조회
     @Transactional(readOnly = true)
     public PostResponseDto getPost(Long id) {
@@ -66,25 +64,23 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
-
-
-    // Post 수정
+    /// Post 수정
     @Transactional
     public PostResponseDto updatepost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
 
         // 토큰 체크 추가
         User user = checkToken(request);
 
-        if(user == null) {
-            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
-        }
-
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("해당 글이 존재하지 않습니다.")
         );
 
+        if(user == null) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
+
         if (!post.getUser().equals(user)) {
-            throw new IllegalArgumentException("글 작성자가 아닙니다.");
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
 
         post.update(requestDto);

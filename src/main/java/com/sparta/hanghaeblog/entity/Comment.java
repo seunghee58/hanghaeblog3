@@ -25,18 +25,18 @@ public class Comment extends Timestamped {
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "user_name", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonManagedReference
     private User user;
 
     public Comment(User user, CommentRequestDto commentRequestDto, Post post) {
         this.post = post;
         this.user = user;
-        this.comment = commentRequestDto.getContents();
+        this.comment = commentRequestDto.getComment();
     }
 
     public void update(CommentRequestDto commentRequestDto) {
-        this.comment = commentRequestDto.getContents();
+        this.comment = commentRequestDto.getComment();
     }
 
 }

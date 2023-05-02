@@ -40,10 +40,6 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
-
-
-
-
     // Comment 수정
     @Transactional
     public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
@@ -57,10 +53,9 @@ public class CommentService {
             comment.update(commentRequestDto);
             return new CommentResponseDto(comment);
         } else {
-            throw new IllegalArgumentException("권한이 없습니다.");
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
     }
-
 
     /// Comment 삭제
     public ApiResult deleteComment(Long commentId, HttpServletRequest httpServletRequest) {
@@ -78,7 +73,6 @@ public class CommentService {
         }
 
     }
-
 
     // Token 체크
     public User checkToken(HttpServletRequest request){
