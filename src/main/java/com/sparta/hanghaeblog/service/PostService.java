@@ -91,7 +91,7 @@ public class PostService {
 
     // Post 삭제
     @Transactional
-    public void deletepost (Long id, HttpServletRequest request) {
+    public String deletePost (Long id, HttpServletRequest request) {
 
         // 토큰 체크 추가
         User user = checkToken(request);
@@ -107,8 +107,12 @@ public class PostService {
         if (post.getUser().equals(user)) {
             postRepository.delete(post);
         }
+
+        return "삭제 성공";
     }
 
+
+    // Token 체크
     public User checkToken(HttpServletRequest request){
 
         String token = jwtUtil.resolveToken(request);

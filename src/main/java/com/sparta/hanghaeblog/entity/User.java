@@ -22,11 +22,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING) // 자료형이 열거형(Enum) 타입임을 나타냄, value 옵션으로 EnumType을 String으로 지정하면 상수값이 문자열로 저장되도록 설정됨.
+    private UserRoleEnum role;
 
 
-    // user 객체 생성시 필요한 정보 = username, password
-    public User(String username, String password) {
+    public User(String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 }
