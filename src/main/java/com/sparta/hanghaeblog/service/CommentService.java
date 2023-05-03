@@ -66,7 +66,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
         );
 
-        if (comment.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(user.getRole().ADMIN)) {
+        if (comment.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN)) {
             commentRepository.delete(comment);
             return new ApiResult("삭제 성공", 200);
         } else {
