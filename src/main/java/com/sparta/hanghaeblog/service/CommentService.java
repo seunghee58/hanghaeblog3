@@ -6,6 +6,7 @@ import com.sparta.hanghaeblog.dto.CommentResponseDto;
 import com.sparta.hanghaeblog.entity.Comment;
 import com.sparta.hanghaeblog.entity.Post;
 import com.sparta.hanghaeblog.entity.User;
+import com.sparta.hanghaeblog.entity.UserRoleEnum;
 import com.sparta.hanghaeblog.jwt.JwtUtil;
 import com.sparta.hanghaeblog.repository.CommentRepository;
 import com.sparta.hanghaeblog.repository.PostRepository;
@@ -49,7 +50,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
         );
 
-        if (comment.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(user.getRole().ADMIN)) {
+        if (comment.getUser().getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN)) {
             comment.update(commentRequestDto);
             return new CommentResponseDto(comment);
         } else {

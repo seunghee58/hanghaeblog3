@@ -6,6 +6,7 @@ import com.sparta.hanghaeblog.dto.PostRequestDto;
 import com.sparta.hanghaeblog.dto.PostResponseDto;
 import com.sparta.hanghaeblog.entity.Post;
 import com.sparta.hanghaeblog.entity.User;
+import com.sparta.hanghaeblog.entity.UserRoleEnum;
 import com.sparta.hanghaeblog.jwt.JwtUtil;
 import com.sparta.hanghaeblog.repository.PostRepository;
 import com.sparta.hanghaeblog.repository.UserRepository;
@@ -75,17 +76,22 @@ public class PostService {
                 () -> new NullPointerException("해당 글이 존재하지 않습니다.")
         );
 
-        if(user == null) {
+        if (user == null) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
 
-        if (!post.getUser().equals(user)) {
+        if (post.getUser().equals(user) || user.getRole().equals(UserRoleEnum.ADMIN)) {
+            post.update(requestDto);
+        } else {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
 
-        post.update(requestDto);
         return new PostResponseDto(post);
     }
+
+
+
+
 
     // Post 삭제
     @Transactional
@@ -102,12 +108,10 @@ public class PostService {
             return new ApiResult("작성자만 삭제할 수 있습니다.", 400);
         }
 
-        if (!post.getUser().equals(user)) {
-            return new ApiResult("작성자만 삭제할 수 있습니다.", 400);
-        }
-
-        if (post.getUser().equals(user)) {
+        if (post.getUser().equals(user) || user.getRole().equals(UserRoleEnum.ADMIN)) {
             postRepository.delete(post);
+        } else {
+            return new ApiResult("작성자만 삭제할 수 있습니다.", 400);
         }
 
         return new ApiResult("삭제 성공", 200);

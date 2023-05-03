@@ -48,7 +48,7 @@ public class UserService {
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+                return new ApiResult("관리자 암호가 틀려 등록이 불가능합니다.", 400);
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -63,7 +63,6 @@ public class UserService {
     public ApiResult login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String username = loginRequestDto.getUsername();
         String password = loginRequestDto.getPassword();
-
 
         // 사용자 확인
         User user = userRepository.findByUsername(username).orElseThrow(
